@@ -3,10 +3,6 @@ import * as bcrypt from 'bcryptjs';
 import * as _ from 'lodash';
 import mongoose, { Document } from 'mongoose';
 import { AbstractDocument } from 'src/configurations/database';
-import {
-  Country,
-  CountryDocument,
-} from 'src/modules/country/entities/country.entity';
 import { AccountType, AccountTypeDocument } from './account_type.entity';
 
 export type UserDocument = User & Document;
@@ -19,14 +15,6 @@ export class User extends AbstractDocument {
     ref: AccountType.name,
   })
   type: AccountTypeDocument | any;
-
-  @Prop({
-    default: null,
-    required: false,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Country.name,
-  })
-  country: CountryDocument;
 
   @Prop({ trim: true, lowercase: true, required: true, unique: true })
   email: string;

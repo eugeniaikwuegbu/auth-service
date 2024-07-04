@@ -9,8 +9,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { NotificationService } from 'src/notifications/notifications.service';
 import { UtilityService } from 'src/utils/utils';
+import { NotificationService } from '../notifications/notification.service';
 import { CreateUserDTO } from '../users/dto/create-user.dto';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
 import { User } from '../users/entities/user.entity';
@@ -58,18 +58,10 @@ export class AuthService {
       this.jwtSecret,
     );
 
-    const verificationLink = this.getVerificationLink(
-      OTP,
-      OTPToken,
-      user?.email,
-    );
-
-    console.log(OTP);
-
     await this.notificationService.sendVerificationEmail(
       user?.email,
       `${user?.firstName} ${user?.lastName}`,
-      verificationLink,
+      OTP,
     );
 
     return { user, OTPToken };
@@ -97,17 +89,13 @@ export class AuthService {
       this.jwtSecret,
     );
 
-    const verificationLink = this.getVerificationLink(
-      OTP,
-      OTPToken,
-      user?.email,
-    );
-
     await this.notificationService.sendVerificationEmail(
       user?.email,
       user?.getFullName(),
-      verificationLink,
+      OTP,
     );
+
+    return { user, OTPToken };
   }
 
   async verifyAccount(payload: VerifyOTP) {
@@ -183,15 +171,12 @@ export class AuthService {
 
     if (!user) return;
 
-    let passwordResetUrl;
-    if (user) {
-      const token = await this.utilService.generateToken(
-        { email: payload.email, id: user._id },
-        '10m',
-        this.jwtSecret,
-      );
-      passwordResetUrl = this.getPasswordResetUrl(token);
-    }
+    const token = await this.utilService.generateToken(
+      { email: payload.email, id: user._id },
+      '10m',
+      this.jwtSecret,
+    );
+    const passwordResetUrl = this.getPasswordResetUrl(token);
 
     await this.notificationService.sendForgotPasswordEmail(
       user?.email,

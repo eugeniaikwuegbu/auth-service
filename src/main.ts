@@ -9,7 +9,6 @@ import * as morgan from 'morgan';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './interceptors/response-interceptor';
-import { CustomIoAdapter } from './middlewares/socket-io.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,7 +32,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('auth-service/docs', app, document);
 
-  app.useWebSocketAdapter(new CustomIoAdapter(app));
   app.enableCors({
     origin: '*', // Allow all origins (not recommended for production)
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

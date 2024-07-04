@@ -23,7 +23,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse> {
       map((data) => ({
         statusCode: context.switchToHttp().getResponse().statusCode,
         message: data?.message,
-        data: data.response ? data?.response || data : null,
+        data: data?.response ? data?.response || data : null,
       })),
     );
   }

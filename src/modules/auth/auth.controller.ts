@@ -87,10 +87,11 @@ export class AuthController {
   @Post('/resend-verification')
   async resendVerification(@Body() payload: ResendVerificationDTO) {
     try {
-      await this.authService.resendVerification(payload.email);
+      const response = await this.authService.resendVerification(payload.email);
       return {
         message:
           'A verification mail has been sent successfully, Please check your email',
+        response,
       };
     } catch (error) {
       this.logger.error('AuthController :: resend-verification');

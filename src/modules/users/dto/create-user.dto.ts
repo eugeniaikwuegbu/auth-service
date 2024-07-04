@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import {
-  IsEmail,
-  IsMongoId,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { IsValidPassword } from '../../auth/decorators/password-decorator';
 
 export class CreateUserDTO {
@@ -43,13 +37,4 @@ export class CreateUserDTO {
   @IsString()
   @IsValidPassword()
   password: string;
-
-  @ApiProperty({
-    example: '65b79a047909d2efec1ee5f6',
-    description: 'This is mongoId of the country selected',
-    required: true,
-  })
-  @IsOptional()
-  @IsMongoId()
-  country: any;
 }
